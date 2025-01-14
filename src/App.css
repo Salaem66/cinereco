@@ -1,0 +1,125 @@
+/* src/App.css */
+
+/* Styles généraux */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+}
+
+.app-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+  text-align: center;
+}
+
+/* Étape 1 : Sélection des Genres */
+.genre-selection {
+  margin-top: 2rem;
+}
+
+.card-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.genre-card {
+  width: 400px;
+  height: 700px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.genre-card h3 {
+  font-size: 1.5em;
+}
+
+/* Étape 2 : Sélection de la Durée */
+.duration-selection {
+  margin-top: 2rem;
+}
+
+.slider-container {
+  width: 80%;
+  margin: 0.5em auto;
+}
+
+.validate-button {
+  margin-top: 1em;
+  padding: 0.5em 1em;
+  background-color: #3498db;
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.validate-button:hover {
+  background-color: #2980b9;
+}
+
+/* Étape 3 : Résultats */
+.results-section {
+  margin-top: 2rem;
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1em;
+  margin-top: 1em;
+}
+
+.movie-card {
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  overflow: hidden;
+  text-align: center;
+  padding: 0.5em;
+}
+
+.poster {
+  width: 100%;
+  height: auto;
+}
+
+.placeholder {
+  background: #ddd;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+}
+
+.movie-title {
+  font-size: 1em;
+  margin: 0.5em 0;
+}
+
+.genre-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em;
+  justify-content: center;
+  margin-top: 0.5em;
+}
+
+.genre-tag {
+  background: #3498db;
+  color: #fff;
+  border-radius: 4px;
+  padding: 0.2em 0.4em;
+  font-size: 0.8em;
+  text-transform: capitalize;
+}

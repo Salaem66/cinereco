@@ -1,0 +1,81 @@
+/* src/components/MovieModal.css */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: #fff;
+    width: 80%;
+    max-width: 800px;
+    border-radius: 8px;
+    position: relative;
+    padding: 1em;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 0.5em;
+    right: 1em;
+    background: none;
+    border: none;
+    font-size: 2em;
+    cursor: pointer;
+    color: #333;
+  }
+  
+  .modal-header {
+    display: flex;
+    gap: 1em;
+  }
+  
+  .modal-poster {
+    width: 200px;
+    border-radius: 4px;
+  }
+  
+  .modal-poster.placeholder {
+    background: #ddd;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+  }
+  
+  .modal-info {
+    flex: 1;
+    text-align: left;
+  }
+  
+  .modal-info h2 {
+    margin-top: 0;
+  }
+  
+  .modal-providers {
+    margin-top: 1em;
+  }
+  
+  .providers-list {
+    display: flex;
+    gap: 0.5em;
+    flex-wrap: wrap;
+  }
+  
+  .provider-logo {
+    width: 50px;
+    height: auto;
+    border-radius: 4px;
+  }
+  
