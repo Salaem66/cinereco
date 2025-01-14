@@ -1,7 +1,7 @@
 // src/services/tmdb.js
 
 /**
- * Mapping ID -> label (pour l’affichage)
+ * Mapping ID -> label (pour l'affichage)
  */
 export const GENRE_LABELS = {
   28: 'Action',
@@ -23,7 +23,6 @@ export const GENRE_LABELS = {
   53: 'Thriller',
   10752: 'Guerre',
   37: 'Western',
-  // Ajoute d'autres genres si nécessaire
 };
 
 /**
@@ -50,17 +49,15 @@ export const GENRES = [
   { id: 53, name: 'Thriller' },
   { id: 10752, name: 'Guerre' },
   { id: 37, name: 'Western' },
-  // Ajoute d'autres genres si nécessaire
 ];
 
 /**
  * Clé API TMDb
- * Utilise la variable d'environnement REACT_APP_TMDB_API_KEY
  */
 const API_KEY = "6ef7318d02f41956a25c992eb066a580";
 
 if (!API_KEY) {
-  console.error('Erreur : REACT_APP_TMDB_API_KEY n\'est pas défini dans le fichier .env');
+  console.error('Erreur : La clé API TMDb n\'est pas définie');
 }
 
 /**
@@ -69,15 +66,17 @@ if (!API_KEY) {
 const BASE_URL = 'https://api.themoviedb.org/3';
 
 /**
- * Appel à l’API TMDb pour récupérer les films selon les genres et la durée
+ * Appel à l'API TMDb pour récupérer les films selon les genres, la durée, la région et la popularité minimale
  * 
  * @param {string} genreIds - Liste des IDs de genres séparés par des virgules (ex. "28,35,99")
  * @param {number} duration - Durée maximale des films en minutes
+ * @param {string} region - Code de la région (ex. "FR" pour la France)
+ * @param {number} minPopularity - Popularité minimale des films
  * @returns {Promise<Array>} - Tableau de films
  */
-export async function fetchMovies(genreIds, duration) {
+export async function fetchMovies(genreIds, duration, region = 'FR', minPopularity = 40) {
   try {
-    let url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&language=fr-FR&sort_by=popularity.desc&with_runtime.lte=${duration}`;
+    let url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&language=fr-FR&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_runtime.lte=${duration}&region=${region}&vote_count.gte=100&popularity.gte=${minPopularity}`;
 
     if (genreIds) {
       url += `&with_genres=${genreIds}`;
@@ -126,16 +125,30 @@ export async function fetchMovieDetails(movieId) {
 export async function fetchWatchProviders(movieId) {
   try {
     const url = `${BASE_URL}/movie/${movieId}/watch/providers?api_key=${API_KEY}`;
-
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`Erreur TMDb lors de la récupération des plateformes : ${response.status}`);
     }
-
     const data = await response.json();
-    return data;
+    return data.results.FR || {}; // Retourne uniquement les résultats pour la France
   } catch (error) {
     console.error('fetchWatchProviders Error:', error);
-    throw error;
+    return {};
   }
 }
+
+/**
+ * Vérifie si un film est disponible en France sur au moins une plateforme
+ * @param {number} movieId - ID du film
+ * @returns {Promise<boolean>} - True si le film est disponible, false sinon
+ */
+export async function isAvailableInFrance(movieId) {
+  try {
+    const providers = await fetchWatchProviders(movieId);
+    return !!(providers.flatrate || providers.rent || providers.buy);
+  } catch (error) {
+    console.error('isAvailableInFrance Error:', error);
+    return false;
+  }
+}
+

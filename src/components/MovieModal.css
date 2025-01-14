@@ -79,3 +79,29 @@
     border-radius: 4px;
   }
   
+  @media (max-width: 768px) {
+    .modal-content {
+      width: 95%;
+      max-height: 95vh;
+      padding: 15px;
+    }
+  
+    .modal-header {
+      flex-direction: column;
+    }
+  
+    .modal-poster {
+      width: 100%;
+      max-width: 200px;
+      margin-bottom: 15px;
+    }
+  
+    .modal-info h2 {
+      font-size: 20px;
+    }
+  
+    .provider-logo {
+      width: 40px;
+      height: 40px;
+    }
+  }
