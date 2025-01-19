@@ -76,7 +76,7 @@ const BASE_URL = 'https://api.themoviedb.org/3';
  */
 export async function fetchMovies(genreIds, duration, region = 'FR', minPopularity = 40) {
   try {
-    let url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&language=fr-FR&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_runtime.lte=${duration}&region=${region}&vote_count.gte=100&popularity.gte=${minPopularity}`;
+    let url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&language=fr-FR&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_runtime.lte=${duration}&region=${region}&vote_count.gte=100&popularity.gte=${minPopularity}&append_to_response=runtime`;
 
     if (genreIds) {
       url += `&with_genres=${genreIds}`;
@@ -102,7 +102,7 @@ export async function fetchMovies(genreIds, duration, region = 'FR', minPopulari
  */
 export async function fetchMovieDetails(movieId) {
   try {
-    const url = `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=fr-FR`;
+    const url = `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=fr-FR&append_to_response=runtime`;
 
     const response = await fetch(url);
     if (!response.ok) {
@@ -151,4 +151,3 @@ export async function isAvailableInFrance(movieId) {
     return false;
   }
 }
-

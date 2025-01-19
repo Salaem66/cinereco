@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import TinderCard from 'react-tinder-card';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import { fetchMovies, GENRES, GENRE_LABELS, fetchMovieDetails, fetchWatchProviders, isAvailableInFrance } from './services/tmdb';
 import MovieModal from './components/MovieModal';
+import GenreCards from './components/GenreCards';
 import './App.css';
 
 const MAX_SELECTED_GENRES = 3;
@@ -53,7 +53,6 @@ function App() {
         const joinedGenres = selectedGenres.length > 0 ? selectedGenres.join(',') : '';
         const fetchedMovies = await fetchMovies(joinedGenres, duration, 'FR', MIN_POPULARITY);
         
-        // Filtrer les films disponibles en France
         const availableMovies = await Promise.all(
           fetchedMovies.map(async (movie) => {
             const isAvailable = await isAvailableInFrance(movie.id);
@@ -116,47 +115,15 @@ function App() {
 
       <AnimatePresence mode="wait">
         {!genresCompleted && (
-          <motion.div 
-            key="genre-selection"
-            className="genre-selection"
-            initial={{ x: '-100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          >
-            <h2>Swipe les genres qui t'intéressent (sélectionne jusqu'à {MAX_SELECTED_GENRES} genres)</h2>
-            <div className="card-container">
-              {GENRES.map((genre, index) => (
-                index === currentGenreIndex && (
-                  <TinderCard
-                    className="swipe"
-                    key={genre.id}
-                    onSwipe={(dir) => handleSwipe(dir, genre)}
-                    onCardLeftScreen={() => setCurrentGenreIndex(prevIndex => prevIndex - 1)}
-                    preventSwipe={['up', 'down']}
-                  >
-                    <motion.div 
-                      className="genre-card"
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <h3>{genre.name}</h3>
-                    </motion.div>
-                  </TinderCard>
-                )
-              ))}
-            </div>
-            <p>Genres sélectionnés : {selectedGenres.map(id => GENRE_LABELS[id]).join(', ')}</p>
-            {selectedGenres.length > 0 && (
-              <motion.button 
-                onClick={() => setGenresCompleted(true)} 
-                className="validate-button"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Terminer la sélection
-              </motion.button>
-            )}
-          </motion.div>
+          <GenreCards 
+            genres={GENRES}
+            currentGenreIndex={currentGenreIndex}
+            handleSwipe={handleSwipe}
+            selectedGenres={selectedGenres}
+            setGenresCompleted={setGenresCompleted}
+            MAX_SELECTED_GENRES={MAX_SELECTED_GENRES}
+            GENRE_LABELS={GENRE_LABELS}
+          />
         )}
 
         {genresCompleted && !durationCompleted && (
@@ -240,16 +207,21 @@ function App() {
                       <div className="poster placeholder">Pas d'affiche</div>
                     )}
                     <h3 className="movie-title">{movie.title}</h3>
-                    <div className="genre-tags">
-                      {movie.genre_ids.map((gId) => (
-                        <span key={gId} className="genre-tag">
-                          {GENRE_LABELS[gId] || 'Inconnu'}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="movie-rating">
-                      <span className="star">⭐</span>
-                      <span>{movie.vote_average.toFixed(1)}</span>
+                    <div className="movie-info">
+                      <div className="genre-tags">
+                        {movie.genre_ids.map((gId) => (
+                          <span key={gId} className="genre-tag">
+                            {GENRE_LABELS[gId] || 'Inconnu'}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="movie-rating">
+                        <span className="star">⭐</span>
+                        <span>{movie.vote_average.toFixed(1)}</span>
+                      </div>
+                      <div className="movie-duration">
+                        <span>⏱️ {movie.runtime || 'N/A'} min</span>
+                      </div>
                     </div>
                   </motion.div>
                 ))}
